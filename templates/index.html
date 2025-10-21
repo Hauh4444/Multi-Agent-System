@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Multi-Agent System</title>
+    <meta name="description" content="Advanced multi-agent AI system with real-time orchestration">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+    <div class="app-container">
+        <!-- Header -->
+        <header class="app-header">
+            <div class="header-content">
+                <div class="logo">
+                    <i class="fas fa-robot"></i>
+                    <h1>Multi-Agent System</h1>
+                </div>
+                <div class="header-controls">
+                    <button id="systemStatusBtn" class="btn btn-secondary">
+                        <i class="fas fa-chart-line"></i>
+                        System Status
+                    </button>
+                    <button id="newSessionBtn" class="btn btn-primary">
+                        <i class="fas fa-plus"></i>
+                        New Session
+                    </button>
+                </div>
+            </div>
+        </header>
+
+        <!-- Main Content -->
+        <main class="app-main">
+            <!-- Chat Interface -->
+            <div class="chat-container">
+                <div class="chat-header">
+                    <div class="chat-info">
+                        <h2>AI Assistant</h2>
+                        <div class="session-info">
+                            <span id="sessionId">Session: Not connected</span>
+                            <span id="userId">User: Not connected</span>
+                        </div>
+                    </div>
+                    <div class="chat-controls">
+                        <button id="clearChatBtn" class="btn btn-outline">
+                            <i class="fas fa-trash"></i>
+                            Clear
+                        </button>
+                        <button id="exportChatBtn" class="btn btn-outline">
+                            <i class="fas fa-download"></i>
+                            Export
+                        </button>
+                    </div>
+                </div>
+
+                <div class="chat-messages" id="chatMessages">
+                    <div class="message system-message">
+                        <div class="message-content">
+                            <i class="fas fa-info-circle"></i>
+                            <span>Welcome to the Multi-Agent System! I'm powered by specialized AI agents that work together to provide intelligent responses.</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="chat-input-container">
+                    <div class="input-wrapper">
+                        <textarea id="messageInput" placeholder="Ask me anything..." rows="1" aria-label="Message input"></textarea>
+                        <button id="sendBtn" class="btn btn-primary" aria-label="Send message">
+                            <i class="fas fa-paper-plane"></i>
+                        </button>
+                    </div>
+                    <div class="input-suggestions" id="inputSuggestions">
+                        <button class="suggestion-btn" data-message="Hello, how are you?">Hello, how are you?</button>
+                        <button class="suggestion-btn" data-message="What can you help me with?">What can you help me with?</button>
+                        <button class="suggestion-btn" data-message="Tell me about the system architecture">Tell me about the system architecture</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Sidebar -->
+            <div class="sidebar">
+                <!-- Agent Status Panel -->
+                <div class="panel">
+                    <div class="panel-header">
+                        <h3><i class="fas fa-cogs"></i> Agent Status</h3>
+                        <button id="refreshAgentsBtn" class="btn btn-sm">
+                            <i class="fas fa-sync-alt"></i>
+                        </button>
+                    </div>
+                    <div class="panel-content" id="agentStatus">
+                        <div class="agent-item">
+                            <div class="agent-info">
+                                <span class="agent-name">Conversational Agent</span>
+                                <span class="agent-status status-idle">Idle</span>
+                            </div>
+                            <div class="agent-metrics">
+                                <small>Requests: 0</small>
+                            </div>
+                        </div>
+                        <div class="agent-item">
+                            <div class="agent-info">
+                                <span class="agent-name">Memory Agent</span>
+                                <span class="agent-status status-idle">Idle</span>
+                            </div>
+                            <div class="agent-metrics">
+                                <small>Requests: 0</small>
+                            </div>
+                        </div>
+                        <div class="agent-item">
+                            <div class="agent-info">
+                                <span class="agent-name">Matching Agent</span>
+                                <span class="agent-status status-idle">Idle</span>
+                            </div>
+                            <div class="agent-metrics">
+                                <small>Requests: 0</small>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- System Metrics Panel -->
+                <div class="panel">
+                    <div class="panel-header">
+                        <h3><i class="fas fa-chart-bar"></i> System Metrics</h3>
+                    </div>
+                    <div class="panel-content" id="systemMetrics">
+                        <div class="metric-item">
+                            <span class="metric-label">Total Requests</span>
+                            <span class="metric-value" id="totalRequests">0</span>
+                        </div>
+                        <div class="metric-item">
+                            <span class="metric-label">Active Sessions</span>
+                            <span class="metric-value" id="activeSessions">0</span>
+                        </div>
+                        <div class="metric-item">
+                            <span class="metric-label">Avg Response Time</span>
+                            <span class="metric-value" id="avgResponseTime">0ms</span>
+                        </div>
+                        <div class="metric-item">
+                            <span class="metric-label">Success Rate</span>
+                            <span class="metric-value" id="successRate">100%</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Context Panel -->
+                <div class="panel">
+                    <div class="panel-header">
+                        <h3><i class="fas fa-brain"></i> Context</h3>
+                    </div>
+                    <div class="panel-content" id="contextPanel">
+                        <div class="context-item">
+                            <span class="context-label">Sentiment</span>
+                            <span class="context-value" id="currentSentiment">neutral</span>
+                        </div>
+                        <div class="context-item">
+                            <span class="context-label">Intent</span>
+                            <span class="context-value" id="currentIntent">general</span>
+                        </div>
+                        <div class="context-item">
+                            <span class="context-label">Confidence</span>
+                            <span class="context-value" id="currentConfidence">0.5</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- Modals -->
+    <div id="systemStatusModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>System Status</h2>
+                <button class="modal-close">&times;</button>
+            </div>
+            <div class="modal-body" id="systemStatusContent">
+                <!-- System status content will be loaded here -->
+            </div>
+        </div>
+    </div>
+
+    <!-- Scripts -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.7.2/socket.io.js"></script>
+    <script src="{{ url_for('static', filename='js/app.js') }}"></script>
+</body>
+</html>
